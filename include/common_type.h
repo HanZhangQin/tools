@@ -39,4 +39,69 @@ typedef union
 #define PBA_GET_LUN(pba)    (((l2p_entry_t)pba).xLun / MAX_CHANNEL)
 #define PBA_GET_BLK(pba)    (((l2p_entry_t)pba).blkPage / NAND_PAGE_NUM_PER_BLOCK)
 #define PBA_GET_PG(pba)     (((l2p_entry_t)pba).blkPage % NAND_PAGE_NUM_PER_BLOCK)
+
+#define IS_CHAR_DEC(ch)     (((ch) >= '0') && ((ch) <='9'))
+#define IS_CHAR_HEX(ch)     (IS_CHAR_DEC(ch) \
+                            || (((ch) >= 'a') && ((ch) <= 'f')) \
+                            || (((ch) >= 'A') && ((ch) <= 'F')))
+
+static inline u32 string_to_u64(const char *str, u64 *val)
+{
+    char tmp_str[128];
+    const char *ch = str;
+    u32 str_len = 0, isHex = false, num = 0;
+    u64 tmp_val = 0;
+
+    while ((*ch == ' ') || (*ch == '\t'))
+    {
+        ch++;
+    }
+
+    if ((ch[0] == '0') 
+        && ((ch[1] == 'x') || (ch[1] == 'X')))
+    {
+        isHex = true;
+        ch += 2;
+    }
+
+    while ((isHex ? IS_CHAR_HEX(ch[str_len]) : IS_CHAR_DEC(ch[str_len])) 
+          && str_len < (sizeof(tmp_str)/ sizeof(tmp_str[0]) - 1))
+    {
+        tmp_str[str_len] = ch[str_len];
+        str_len++;
+    }
+
+    tmp_str[str_len] = '\0';
+    ch = tmp_str;
+    while (*ch)
+    {
+        u64 tmp;        
+        if (isHex)
+        {
+            if (IS_CHAR_DEC(*ch))
+            {
+                tmp = *ch - '0';
+            }
+            else if (*ch >= 'a' && *ch <= 'f')
+            {
+                tmp = *ch - 'a' + 10;
+            }
+            else 
+            {
+                tmp = *ch - 'A' + 10;
+            }
+            tmp_val = ((tmp_val << 4) + tmp);
+        }
+        else 
+        {
+            tmp = *ch - '0';
+            tmp_val = tmp_val * 10 + tmp; 
+        }
+
+        ch++;
+    }
+
+    *val = tmp_val;
+    return str_len;
+}
 #endif

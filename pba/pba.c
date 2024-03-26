@@ -88,6 +88,7 @@ void usage(char opt)
     }
 }
 
+#if 0
 u64 str_to_u64(const char *str)
 {
     char tmp_str[256];
@@ -117,6 +118,7 @@ u64 str_to_u64(const char *str)
 
     return ret;
 }
+#endif
 
 U_FPA_44BIT pba32_to_44(l2p_entry_t pba)
 {
@@ -163,12 +165,23 @@ void print_pba(l2p_entry_t pba)
 u32 print_pba_by_string(const char *pba_str)
 {
     l2p_entry_t pba;
-    char *endPtr;
+ #if 0
+    char *endPtr;    
     pba.pba = (u32)str_to_u64(pba_str);
     if (pba.pba == INVALID_U32)
     {
         return RET_FAIL;
     }
+#else
+    u64 val; 
+    if (0 == string_to_u64(pba_str, &val))
+    {
+        printf("PBA %s is not valid\n", pba_str);
+        return RET_FAIL;
+    }
+    pba.pba = (u32)val;
+#endif
+
     print_pba(pba);
  #if DOUBLE_CHECK_32_44
     print_pba44(pba32_to_44(pba));
@@ -190,7 +203,7 @@ u32 print_pba_by_file(char *pba_file)
     printf ("######### %s #########\n", pba_file);
     while (fgets(pba_str, sizeof(pba_str), fp) != NULL)
     {
-        pba_str[strlen(pba_str) - 1] = '\0';
+        // pba_str[strlen(pba_str) - 1] = '\0';
         printf("%d: ", line++);
         print_pba_by_string(pba_str);
     }
@@ -233,20 +246,43 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
 
     if (str_num == 1)
     {
+ #if 0       
         pba44.val = str_to_u64(pba44_str[0]);
         if (pba44.val == INVALID_U64)
         {
             return RET_FAIL;
         }
+ #else
+        if (0 == string_to_u64(pba44_str[0], &pba44.val))
+        {
+            printf("PBA %s is not valid\n", pba44_str[0]);
+            return RET_FAIL;
+        }
+ #endif   
     }
     else if (str_num == 2)
     {
+        u64 lo32;
+        u64 hi32;
+ #if 0       
         u64 lo32 = str_to_u64(pba44_str[0]);
         u64 hi32 = str_to_u64(pba44_str[1]);
         if (lo32 == INVALID_U64 || hi32 == INVALID_U64)
         {
             return RET_FAIL;
         }
+#else
+        if (0 == string_to_u64(pba44_str[0], &lo32))
+        {
+            printf("PBA %s is not valid\n", pba44_str[0]);
+            return RET_FAIL;
+        }
+        else if (0 == string_to_u64(pba44_str[1], &hi32))
+        {
+            printf("PBA %s is not valid\n", pba44_str[0]);
+            return RET_FAIL;
+        }
+#endif        
         pba44.lo32 = (u32)lo32;
         pba44.hi32 = (u32)hi32;
     }
