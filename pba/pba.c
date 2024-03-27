@@ -2,7 +2,7 @@
  * @Author: Hanzhang Qin hanzhang.qin@memblaze.com
  * @Date: 2024-03-22 16:19:10
  * @LastEditors: Hanzhang Qin hanzhang.qin@memblaze.com
- * @LastEditTime: 2024-03-27 17:57:16
+ * @LastEditTime: 2024-03-27 18:33:29
  * @FilePath: \undefinedz:\useful\PBA\pba.c
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -120,18 +120,18 @@ void print_pba(l2p_entry_t pba)
     u32 sblk    = blk * NAND_PLANE_NUM + pba.pl;
     U_FPA_44BIT pba44 = pba32_to_44(pba);
 
-    printf ("pba 0x%x: ch %d ln %d sb %d pg %d df %d blk %d pl %d xlun %d 44bit 0x%llx [l:0x%x h:0x%x]\n"  , pba.pba
-                                                                                                                , ch
-                                                                                                                , lun
-                                                                                                                , sblk
-                                                                                                                , page
-                                                                                                                , pba.df
-                                                                                                                , blk
-                                                                                                                , pba.pl
-                                                                                                                , pba.xLun
-                                                                                                                , pba44.val
-                                                                                                                , pba44.lo32
-                                                                                                                , pba44.hi32);
+    printf ("pba 0x%x: ch %d ln %d sb %d pg %d df %d blk %d pl %d xlun %d 44bit 0x%llx [lo32 hi32: 0x%x 0x%x]\n"  , pba.pba
+                                                                                                                    , ch
+                                                                                                                    , lun
+                                                                                                                    , sblk
+                                                                                                                    , page
+                                                                                                                    , pba.df
+                                                                                                                    , blk
+                                                                                                                    , pba.pl
+                                                                                                                    , pba.xLun
+                                                                                                                    , pba44.val
+                                                                                                                    , pba44.lo32
+                                                                                                                    , pba44.hi32);
 }
 
 u32 print_pba_by_string(const char *pba_str)
@@ -139,9 +139,16 @@ u32 print_pba_by_string(const char *pba_str)
     l2p_entry_t pba;
 
     u64 val;
-    if (0 == string_to_u64(pba_str, &val))
+    if (0 == string_to_u64(pba_str, &val) || val > INVALID_U32)
     {
-        printf("ERR: PBA32 %s is not valid\n", pba_str);
+        if (is_empty_string(pba_str))
+        {
+            printf ("Skip Empty Line\n");
+        }
+        else
+        {
+            printf("ERR: PBA32 \"%s\" is not valid\n", pba_str);
+        }
         return RET_FAIL;
     }
     pba.pba = (u32)val;
@@ -172,7 +179,7 @@ u32 print_pba_by_file(char *pba_file)
     printf ("######### %s #########\n", pba_file);
     while (fgets(pba_str, sizeof(pba_str), fp) != NULL)
     {
-        // pba_str[strlen(pba_str) - 1] = '\0';
+        pba_str[strlen(pba_str) - 1] = '\0';
         printf("%d: ", line++);
         print_pba_by_string(pba_str);
     }

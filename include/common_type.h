@@ -47,6 +47,15 @@ typedef union
 
 #define STR_TO_U64_DOUBLE_CHECK    1
 
+static inline u32 is_empty_string(const char *str)
+{
+    const char *ch = str;
+
+    while (*ch < 33 && *ch++);
+
+    return (*ch == '\0');
+}
+
 static inline u32 u64_to_hex_string(u64 val, char *ret_str)
 {
 	char *str = &ret_str[2];
@@ -156,23 +165,28 @@ static inline u32 string_to_u64(const char *str, u64 *val)
     }
 
 #if STR_TO_U64_DOUBLE_CHECK
-    char check_str[128];
-    if (isHex)
+    if (str_len)
     {
-        u64_to_hex_string(tmp_val, check_str);
-    }
-    else
-    {
-        u64_to_dec_string(tmp_val, check_str);
-    }
-    if (strcmp(check_str + isHex * 2, tmp_str) != 0)
-    {
-        printf ("ERR transfer ori_str %s chk_str %s val 0x%llx %lld\n", tmp_str , check_str, tmp_val, tmp_val);
+        char check_str[128];
+        if (isHex)
+        {
+            u64_to_hex_string(tmp_val, check_str);
+        }
+        else
+        {
+            u64_to_dec_string(tmp_val, check_str);
+        }
+        if (strcmp(check_str + isHex * 2, tmp_str) != 0)
+        {
+            printf ("ERR transfer ori_str %s chk_str %s val 0x%llx %lld\n", tmp_str , check_str, tmp_val, tmp_val);
+        }
     }
 #endif
 
     *val = tmp_val;
     return str_len;
 }
+
+
 
 #endif
