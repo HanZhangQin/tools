@@ -2,7 +2,7 @@
  * @Author: Hanzhang Qin hanzhang.qin@memblaze.com
  * @Date: 2024-03-22 16:19:10
  * @LastEditors: Hanzhang Qin hanzhang.qin@memblaze.com
- * @LastEditTime: 2024-03-27 16:14:03
+ * @LastEditTime: 2024-03-27 17:38:27
  * @FilePath: \undefinedz:\useful\PBA\pba.c
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -21,6 +21,7 @@
                                             }\
                                           } while (0)
 void print_pba44(U_FPA_44BIT pba44);
+l2p_entry_t pba44_to_pba32(U_FPA_44BIT pba44);
 
 void usage(char opt)
 {
@@ -144,7 +145,12 @@ u32 print_pba_by_string(const char *pba_str)
 
     print_pba(pba);
  #if DOUBLE_CHECK_32_44
-    print_pba44(pba32_to_44(pba));
+    l2p_entry_t chk_pba;
+    chk_pba = pba44_to_pba32(pba32_to_44(pba));
+    if (chk_pba.pba != pba.pba)
+    {
+        printf ("ERR PBA32 parse wrong str %s p32 0x%x chk_p32 0x%x\n", pba_str, pba.pba, chk_pba.pba);
+    }
  #endif
     return RET_SUCCESS;
 }
@@ -186,7 +192,7 @@ l2p_entry_t pba44_to_pba32(U_FPA_44BIT pba44)
 void print_pba44(U_FPA_44BIT pba44)
 {
     l2p_entry_t pba = pba44_to_pba32(pba44);
-    printf ("pba44 0x%llx [l:0x%x h:0x%x]: ch %d ln %d sb %d pg %d df %d blk %d pl %d xlun %d 32bit 0x%x\n", pba44.val
+    printf ("pba44 0x%llx [lo32 hi32: 0x%x 0x%x]: ch %d ln %d sb %d pg %d df %d blk %d pl %d xlun %d 32bit 0x%x\n", pba44.val
                                                                                                                 , pba44.lo32
                                                                                                                 , pba44.hi32
                                                                                                                 , pba44.ch
@@ -208,7 +214,7 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
     {
         if (0 == string_to_u64(pba44_str[0], &pba44.val))
         {
-            printf("PBA %s is not valid\n", pba44_str[0]);
+            printf("ERR PBA44 %s is not valid\n", pba44_str[0]);
             return RET_FAIL;
         }
     }
@@ -217,14 +223,14 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
         u64 lo32;
         u64 hi32;
 
-        if (0 == string_to_u64(pba44_str[0], &lo32))
+        if (0 == string_to_u64(pba44_str[0], &lo32) || lo32 > INVALID_U32)
         {
-            printf("PBA %s is not valid\n", pba44_str[0]);
+            printf("ERR PBA44 lo32 %s is not valid\n", pba44_str[0]);
             return RET_FAIL;
         }
-        else if (0 == string_to_u64(pba44_str[1], &hi32))
+        else if (0 == string_to_u64(pba44_str[1], &hi32) || hi32 > INVALID_U32)
         {
-            printf("PBA %s is not valid\n", pba44_str[0]);
+            printf("ERR PBA44 hi32 %s is not valid\n", pba44_str[0]);
             return RET_FAIL;
         }
 
@@ -238,7 +244,12 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
 
     print_pba44(pba44);
 #if DOUBLE_CHECK_32_44
-    print_pba(pba44_to_pba32(pba44));
+    U_FPA_44BIT chk_pba44;
+    chk_pba44 = pba32_to_44(pba44_to_pba32(pba44));
+    if (chk_pba44.val != pba44.val)
+    {
+        printf ("ERR PBA44 parse wrong str %s %s p44 0x%llx chk_p44 0x%llx\n", pba44_str[0], (str_num == 1) ? "" : pba44_str[1], pba44.val, chk_pba44.val);
+    }
 #endif
     return RET_SUCCESS;
 }

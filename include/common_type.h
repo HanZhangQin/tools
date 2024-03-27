@@ -45,7 +45,7 @@ typedef union
                             || (((ch) >= 'a') && ((ch) <= 'f')) \
                             || (((ch) >= 'A') && ((ch) <= 'F')))
 
-#define STR_TO_U64_CHECK    1
+#define STR_TO_U64_DOUBLE_CHECK    1
 
 static inline u32 u64_to_hex_string(u64 val, char *ret_str)
 {
@@ -92,8 +92,8 @@ static inline u32 u64_to_dec_string(u64 val, char *ret_str)
 
 	do
 	{
-		u32 dec = (tmp_val % 10);
-		ret_str[ofst--] = (dec + '0');
+		// u32 dec = (tmp_val % 10);
+		ret_str[ofst--] = ((tmp_val % 10) + '0');
 	} while (tmp_val /= 10);
 
 	return str_len;
@@ -155,7 +155,7 @@ static inline u32 string_to_u64(const char *str, u64 *val)
         ch++;
     }
 
-#if STR_TO_U64_CHECK
+#if STR_TO_U64_DOUBLE_CHECK
     char check_str[128];
     if (isHex)
     {
