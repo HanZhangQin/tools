@@ -45,6 +45,60 @@ typedef union
                             || (((ch) >= 'a') && ((ch) <= 'f')) \
                             || (((ch) >= 'A') && ((ch) <= 'F')))
 
+#define STR_TO_U64_CHECK    1
+
+static inline u32 u64_to_hex_string(u64 val, char *ret_str)
+{
+	char *str = &ret_str[2];
+	u64 tmp_val = val;
+	u32 str_len = 1;
+	u32 ofst;
+
+	ret_str[0] = '0';
+	ret_str[1] = 'x';
+
+	while (tmp_val >>= 4)
+	{
+		str_len++;
+	}
+
+	str[str_len] = '\0';
+	tmp_val = val;
+	ofst = str_len - 1;
+
+	do
+	{
+		u32 hex = (tmp_val & 0xf);
+		str[ofst--] = (hex < 10) ? (hex + '0') : (hex - 10 + 'a');
+	} while (tmp_val >>= 4);
+
+	return str_len + 2;
+}
+
+static inline u32 u64_to_dec_string(u64 val, char *ret_str)
+{
+	u64 tmp_val = val;
+	u32 str_len = 1;
+	u32 ofst;
+
+	while (tmp_val /= 10)
+	{
+		str_len++;
+	}
+
+	ret_str[str_len] = '\0';
+	tmp_val = val;
+	ofst = str_len - 1;
+
+	do
+	{
+		u32 dec = (tmp_val % 10);
+		ret_str[ofst--] = (dec + '0');
+	} while (tmp_val /= 10);
+
+	return str_len;
+}
+
 static inline u32 string_to_u64(const char *str, u64 *val)
 {
     char tmp_str[128];
@@ -101,7 +155,24 @@ static inline u32 string_to_u64(const char *str, u64 *val)
         ch++;
     }
 
+#if STR_TO_U64_CHECK
+    char check_str[128];
+    if (isHex)
+    {
+        u64_to_hex_string(tmp_val, check_str);
+    }
+    else
+    {
+        u64_to_dec_string(tmp_val, check_str);
+    }
+    if (strcmp(check_str + isHex * 2, tmp_str) != 0)
+    {
+        printf ("ERR transfer ori_str %s chk_str %s val 0x%llx %lld\n", tmp_str , check_str, tmp_val, tmp_val);
+    }
+#endif
+
     *val = tmp_val;
     return str_len;
 }
+
 #endif
