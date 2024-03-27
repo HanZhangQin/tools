@@ -1,8 +1,8 @@
 /*
  * @Author: Hanzhang Qin hanzhang.qin@memblaze.com
  * @Date: 2024-03-22 16:19:10
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-03-25 15:20:45
+ * @LastEditors: Hanzhang Qin hanzhang.qin@memblaze.com
+ * @LastEditTime: 2024-03-27 13:25:34
  * @FilePath: \undefinedz:\useful\PBA\pba.c
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -99,7 +99,7 @@ u64 str_to_u64(const char *str)
         if (*endPtr >= '0')
         {
             break;
-        } 
+        }
         endPtr--;
     }
 
@@ -166,14 +166,14 @@ u32 print_pba_by_string(const char *pba_str)
 {
     l2p_entry_t pba;
  #if 0
-    char *endPtr;    
+    char *endPtr;
     pba.pba = (u32)str_to_u64(pba_str);
     if (pba.pba == INVALID_U32)
     {
         return RET_FAIL;
     }
 #else
-    u64 val; 
+    u64 val;
     if (0 == string_to_u64(pba_str, &val))
     {
         printf("PBA %s is not valid\n", pba_str);
@@ -246,7 +246,7 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
 
     if (str_num == 1)
     {
- #if 0       
+ #if 0
         pba44.val = str_to_u64(pba44_str[0]);
         if (pba44.val == INVALID_U64)
         {
@@ -258,13 +258,13 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
             printf("PBA %s is not valid\n", pba44_str[0]);
             return RET_FAIL;
         }
- #endif   
+ #endif
     }
     else if (str_num == 2)
     {
         u64 lo32;
         u64 hi32;
- #if 0       
+ #if 0
         u64 lo32 = str_to_u64(pba44_str[0]);
         u64 hi32 = str_to_u64(pba44_str[1]);
         if (lo32 == INVALID_U64 || hi32 == INVALID_U64)
@@ -282,7 +282,7 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
             printf("PBA %s is not valid\n", pba44_str[0]);
             return RET_FAIL;
         }
-#endif        
+#endif
         pba44.lo32 = (u32)lo32;
         pba44.hi32 = (u32)hi32;
     }

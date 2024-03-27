@@ -11,7 +11,7 @@
 #include "x3_9070.h"
 #endif
 
-#define DECLARE_BIT_FIELD32(name, lsb, msb) struct { u32 : (lsb); u32 name : ((msb)-(lsb)+1); }
+#define DECLARE_BIT_FIELD32(name, lsb, msb)     struct { u32 : (lsb); u32 name : ((msb)-(lsb)+1); }
 #define L2P_ENTRY_LAU_MSB                       NAND_L2P_ENTRY_AU_MSB
 #define L2P_ENTRY_LAU_LSB                       NAND_L2P_ENTRY_AU_LSB
 #define L2P_ENTRY_PL_MSB                        NAND_L2P_ENTRY_PL_MSB
@@ -57,14 +57,14 @@ static inline u32 string_to_u64(const char *str, u64 *val)
         ch++;
     }
 
-    if ((ch[0] == '0') 
+    if ((ch[0] == '0')
         && ((ch[1] == 'x') || (ch[1] == 'X')))
     {
         isHex = true;
         ch += 2;
     }
 
-    while ((isHex ? IS_CHAR_HEX(ch[str_len]) : IS_CHAR_DEC(ch[str_len])) 
+    while ((isHex ? IS_CHAR_HEX(ch[str_len]) : IS_CHAR_DEC(ch[str_len]))
           && str_len < (sizeof(tmp_str)/ sizeof(tmp_str[0]) - 1))
     {
         tmp_str[str_len] = ch[str_len];
@@ -75,7 +75,7 @@ static inline u32 string_to_u64(const char *str, u64 *val)
     ch = tmp_str;
     while (*ch)
     {
-        u64 tmp;        
+        u64 tmp;
         if (isHex)
         {
             if (IS_CHAR_DEC(*ch))
@@ -86,16 +86,16 @@ static inline u32 string_to_u64(const char *str, u64 *val)
             {
                 tmp = *ch - 'a' + 10;
             }
-            else 
+            else
             {
                 tmp = *ch - 'A' + 10;
             }
             tmp_val = ((tmp_val << 4) + tmp);
         }
-        else 
+        else
         {
             tmp = *ch - '0';
-            tmp_val = tmp_val * 10 + tmp; 
+            tmp_val = tmp_val * 10 + tmp;
         }
 
         ch++;
