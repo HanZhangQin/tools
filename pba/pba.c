@@ -2,7 +2,7 @@
  * @Author: Hanzhang Qin hanzhang.qin@memblaze.com
  * @Date: 2024-03-22 16:19:10
  * @LastEditors: Hanzhang Qin hanzhang.qin@memblaze.com
- * @LastEditTime: 2024-03-27 17:38:27
+ * @LastEditTime: 2024-03-27 17:57:16
  * @FilePath: \undefinedz:\useful\PBA\pba.c
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -20,6 +20,8 @@
                                                 return RET_FAIL;\
                                             }\
                                           } while (0)
+char *g_cmd_line = NULL;
+
 void print_pba44(U_FPA_44BIT pba44);
 l2p_entry_t pba44_to_pba32(U_FPA_44BIT pba44);
 
@@ -32,8 +34,8 @@ void usage(char opt)
         {
             case 'p':
             {
-                printf ("-p input: 1 or more 32 bit pbas. output: parse 32 bit pbas\n");
-                printf("Usage: pba -p <pba0 pba1...>\n");
+                printf("Usage: %s -p <pba0 pba1...>\n", g_cmd_line);
+                printf ("       -p [input]: 1 or more 32 bit pbas. [output]: parse 32 bit pbas\n");
                 if (!print_all)
                 {
                     return;
@@ -41,8 +43,8 @@ void usage(char opt)
             }
             case 'f':
             {
-                printf("-f input: 1 or more files with 32bit fpas. output: parse 32 bit pbas\n");
-                printf("Usage: pba -f <files with pba list>\n");
+                printf("Usage: %s -f <files with pba list>\n", g_cmd_line);
+                printf("        -f [input]: 1 or more files with 32bit fpas. [output]: parse 32 bit pbas\n");
                 if (!print_all)
                 {
                     return;
@@ -50,8 +52,8 @@ void usage(char opt)
             }
             case 'u':
             {
-                printf("-u input 1 or more 44 bit pbas with lo32 & hi32 pairs. output: parse 44 bit pbas & convert to 32 bit pbas\n");
-                printf("Usage: pba -u <lo32 hi32> <lo32 hi32> ...\n");
+                printf("Usage: %s -u <lo32 hi32> <lo32 hi32> ...\n", g_cmd_line);
+                printf("        -u [input]: 1 or more 44 bit pbas with lo32 & hi32 pairs. [output]: parse 44 bit pbas & convert to 32 bit pbas\n");
                 if (!print_all)
                 {
                     return;
@@ -59,8 +61,8 @@ void usage(char opt)
             }
             case 't':
             {
-                printf("-t input 1 or more 44 bit pbas with u64 format. output: parse 44 bit pbas & convert to 32 bit pbas\n");
-                printf("Usage: pba -t <pba44> <pba44> ...\n");
+                printf("Usage: %s -t <pba44> <pba44> ...\n", g_cmd_line);
+                printf("        -t [input]: 1 or more 44 bit pbas with u64 format. [output]: parse 44 bit pbas & convert to 32 bit pbas\n");
                 if (!print_all)
                 {
                     return;
@@ -68,7 +70,8 @@ void usage(char opt)
             }
             case 'v':
             {
-                printf("-v show version information\n");
+                printf("Usage: %s -v\n", g_cmd_line);
+                printf("        -v show version information\n");
                 if (!print_all)
                 {
                     return;
@@ -138,7 +141,7 @@ u32 print_pba_by_string(const char *pba_str)
     u64 val;
     if (0 == string_to_u64(pba_str, &val))
     {
-        printf("PBA %s is not valid\n", pba_str);
+        printf("ERR: PBA32 %s is not valid\n", pba_str);
         return RET_FAIL;
     }
     pba.pba = (u32)val;
@@ -149,7 +152,7 @@ u32 print_pba_by_string(const char *pba_str)
     chk_pba = pba44_to_pba32(pba32_to_44(pba));
     if (chk_pba.pba != pba.pba)
     {
-        printf ("ERR PBA32 parse wrong str %s p32 0x%x chk_p32 0x%x\n", pba_str, pba.pba, chk_pba.pba);
+        printf ("ERR: PBA32 parse wrong str %s p32 0x%x chk_p32 0x%x\n", pba_str, pba.pba, chk_pba.pba);
     }
  #endif
     return RET_SUCCESS;
@@ -214,7 +217,7 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
     {
         if (0 == string_to_u64(pba44_str[0], &pba44.val))
         {
-            printf("ERR PBA44 %s is not valid\n", pba44_str[0]);
+            printf("ERR: PBA44 %s is not valid\n", pba44_str[0]);
             return RET_FAIL;
         }
     }
@@ -230,7 +233,7 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
         }
         else if (0 == string_to_u64(pba44_str[1], &hi32) || hi32 > INVALID_U32)
         {
-            printf("ERR PBA44 hi32 %s is not valid\n", pba44_str[0]);
+            printf("ERR: PBA44 hi32 %s is not valid\n", pba44_str[0]);
             return RET_FAIL;
         }
 
@@ -248,7 +251,7 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
     chk_pba44 = pba32_to_44(pba44_to_pba32(pba44));
     if (chk_pba44.val != pba44.val)
     {
-        printf ("ERR PBA44 parse wrong str %s %s p44 0x%llx chk_p44 0x%llx\n", pba44_str[0], (str_num == 1) ? "" : pba44_str[1], pba44.val, chk_pba44.val);
+        printf ("ERR: PBA44 parse wrong str %s %s p44 0x%llx chk_p44 0x%llx\n", pba44_str[0], (str_num == 1) ? "" : pba44_str[1], pba44.val, chk_pba44.val);
     }
 #endif
     return RET_SUCCESS;
@@ -256,11 +259,12 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
 
 int main(int argc, char **argv)
 {
-    int o, i;
+    int o, i, opt_cnt= 0;
     const char *optstrings = "p:f:u:t:v::";
-
+    g_cmd_line = argv[0];
     while ((o = getopt(argc, argv, optstrings)) != -1)
     {
+        ++opt_cnt;
         switch (o)
         {
             case 'p':
@@ -330,5 +334,11 @@ int main(int argc, char **argv)
         }
     }
 
+    if (0 == opt_cnt)
+    {
+        printf ("ERR: %s need at least 1 option\n", argv[0]);
+        usage(0);
+        return RET_FAIL;
+    }
     return RET_SUCCESS;
 }
