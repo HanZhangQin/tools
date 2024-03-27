@@ -51,7 +51,7 @@ static inline u32 is_empty_string(const char *str)
 {
     const char *ch = str;
 
-    while (*ch < 33 && *ch++);
+    while (*ch && *ch++ < 33);
 
     return (*ch == '\0');
 }
