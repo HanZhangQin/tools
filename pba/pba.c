@@ -35,34 +35,34 @@ void usage(char opt)
             case 'p':
             {
                 printf("Usage: %s -p <pba0 pba1...>\n", g_cmd_line);
-                printf ("       -p [input]: 1 or more 32 bit pbas. [output]: parse 32 bit pbas\n");
+                printf ("            -p [input]: 1 or more 32 bit pbas. [output]: parse 32 bit pbas\n");
                 if (!print_all)
                 {
                     return;
                 }
             }
-            case 'f':
+            case 'P':
             {
-                printf("Usage: %s -f <files with pba list>\n", g_cmd_line);
-                printf("        -f [input]: 1 or more files with 32bit fpas. [output]: parse 32 bit pbas\n");
+                printf("Usage: %s -P <files with pba list>\n", g_cmd_line);
+                printf("            -P [input]: 1 or more files with 32bit fpas. [output]: parse 32 bit pbas\n");
                 if (!print_all)
                 {
                     return;
                 }
             }
-            case 'u':
+            case 's':
             {
-                printf("Usage: %s -u <lo32 hi32> <lo32 hi32> ...\n", g_cmd_line);
-                printf("        -u [input]: 1 or more 44 bit pbas with lo32 & hi32 pairs. [output]: parse 44 bit pbas & convert to 32 bit pbas\n");
+                printf("Usage: %s -s <lo32 hi32> <lo32 hi32> ...\n", g_cmd_line);
+                printf("            -s [input]: 1 or more 44 bit pbas with lo32 & hi32 pairs. [output]: parse 44 bit pbas & convert to 32 bit pbas\n");
                 if (!print_all)
                 {
                     return;
                 }
             }
-            case 't':
+            case 'x':
             {
-                printf("Usage: %s -t <pba44> <pba44> ...\n", g_cmd_line);
-                printf("        -t [input]: 1 or more 44 bit pbas with u64 format. [output]: parse 44 bit pbas & convert to 32 bit pbas\n");
+                printf("Usage: %s -x <pba44> <pba44> ...\n", g_cmd_line);
+                printf("            -x [input]: 1 or more 44 bit pbas with u64 format. [output]: parse 44 bit pbas & convert to 32 bit pbas\n");
                 if (!print_all)
                 {
                     return;
@@ -71,7 +71,7 @@ void usage(char opt)
             case 'v':
             {
                 printf("Usage: %s -v\n", g_cmd_line);
-                printf("        -v show version information\n");
+                printf("            -v show version information\n");
                 if (!print_all)
                 {
                     return;
@@ -269,7 +269,7 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
 int main(int argc, char **argv)
 {
     int o, i, opt_cnt= 0;
-    const char *optstrings = "p:f:u:t:v::";
+    const char *optstrings = "p:P:s:x:v::";
     g_cmd_line = argv[0];
     while ((o = getopt(argc, argv, optstrings)) != -1)
     {
@@ -288,9 +288,9 @@ int main(int argc, char **argv)
                 }
                 break;
             }
-            case 'f':
+            case 'P':
             {
-                CHECK_OPT_PARAM('f', 3);
+                CHECK_OPT_PARAM('P', 3);
                 for (i = optind - 1; i < argc; i++)
                 {
                     if (RET_FAIL == print_pba_by_file(argv[i]))
@@ -300,12 +300,12 @@ int main(int argc, char **argv)
                 }
                 break;
             }
-            case 'u':
+            case 's':
             {
-                CHECK_OPT_PARAM('u', 4);
+                CHECK_OPT_PARAM('s', 4);
                 if ((argc & 1) != 0)
                 {
-                    usage('u');
+                    usage('s');
                     return RET_FAIL;
                 }
                 for (i = optind - 1; i < argc; i += 2)
@@ -317,9 +317,9 @@ int main(int argc, char **argv)
                 }
                 break;
             }
-            case 't':
+            case 'x':
             {
-                CHECK_OPT_PARAM('t', 3);
+                CHECK_OPT_PARAM('x', 3);
                 for (i = optind - 1; i < argc; i += 1)
                 {
                     if (RET_FAIL == print_pba44_by_string((const char **)&argv[i], 1))
