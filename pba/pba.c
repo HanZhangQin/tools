@@ -60,6 +60,15 @@ void usage(char opt)
                     return;
                 }
             }
+            case 'S':
+            {
+                printf("Usage: %s -S <file0> <file1> ...\n", g_cmd_line);
+                printf("            -S [input]: 1 or more files with lo32 & hi32 pairs fpas. [output]: parse lo32 & hi32 pairs pbas\n");
+                if (!print_all)
+                {
+                    return;
+                }
+            }
             case 'x':
             {
                 printf("Usage: %s -x <pba44> <pba44> ...\n", g_cmd_line);
@@ -195,9 +204,16 @@ u32 print_pba_by_file(char *pba_file, u32 is_pba44, u32 str_num)
         printf("%d: ", line++);
         if (is_pba44)
         {
-            const char *pba_str_array[2];
-            pba_str_array[0] = pba_str;
-            print_pba44_by_string(pba_str_array, str_num);
+            char *pba_str_array[2] = {"", ""};
+            if (str_num == 1)
+            {
+                pba_str_array[0] = pba_str;                
+            }
+            else
+            {
+                split_string(pba_str, pba_str_array, 2);
+            }
+            print_pba44_by_string((const char **)pba_str_array, str_num);
         }
         else 
         {
@@ -309,7 +325,7 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
 int main(int argc, char **argv)
 {
     int o, i, opt_cnt= 0;
-    const char *optstrings = "p:P:s:x:X:v::";
+    const char *optstrings = "p:P:s:S:x:X:v::";
     g_cmd_line = argv[0];
     while ((o = getopt(argc, argv, optstrings)) != -1)
     {
@@ -351,6 +367,18 @@ int main(int argc, char **argv)
                 for (i = optind - 1; i < argc; i += 2)
                 {
                     if (RET_FAIL == print_pba44_by_string((const char **)&argv[i], 2))
+                    {
+                        return RET_FAIL;
+                    }
+                }
+                break;
+            }
+            case 'S':
+            {
+                CHECK_OPT_PARAM('S', 3);
+                for (i = optind - 1; i < argc; i++)
+                {
+                    if (RET_FAIL == print_pba_by_file(argv[i], true, 2))
                     {
                         return RET_FAIL;
                     }

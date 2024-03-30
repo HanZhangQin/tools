@@ -187,6 +187,34 @@ static inline u32 string_to_u64(const char *str, u64 *val)
     return str_len;
 }
 
+static inline u32 split_string(char *str, char **colum, u32 max_colum)
+{
+    u32 colum_num = 0, colum_len = 0;
+    char *ch = str;
+
+    while (*ch)
+    {
+        if (*ch >= 33)
+        {
+            if (0 == colum_len)
+            {
+                colum[colum_num++] = ch;
+            }
+            colum_len++;
+        }
+        else 
+        {
+            if (colum_num >= max_colum)
+            {
+                break;
+            }
+            colum_len = 0;
+        }
+        ch++;
+    }
+
+    return colum_num;
+}
 
 
 #endif
