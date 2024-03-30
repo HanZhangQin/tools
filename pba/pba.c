@@ -24,6 +24,7 @@ char *g_cmd_line = NULL;
 
 void print_pba44(U_FPA_44BIT pba44);
 l2p_entry_t pba44_to_pba32(U_FPA_44BIT pba44);
+u32 print_pba44_by_string(const char *pba44_str[], u32 str_num);
 
 void usage(char opt)
 {
@@ -43,7 +44,7 @@ void usage(char opt)
             }
             case 'P':
             {
-                printf("Usage: %s -P <files with pba list>\n", g_cmd_line);
+                printf("Usage: %s -P <file0> <file1> ...\n", g_cmd_line);
                 printf("            -P [input]: 1 or more files with 32bit fpas. [output]: parse 32 bit pbas\n");
                 if (!print_all)
                 {
@@ -63,6 +64,15 @@ void usage(char opt)
             {
                 printf("Usage: %s -x <pba44> <pba44> ...\n", g_cmd_line);
                 printf("            -x [input]: 1 or more 44 bit pbas with u64 format. [output]: parse 44 bit pbas & convert to 32 bit pbas\n");
+                if (!print_all)
+                {
+                    return;
+                }
+            }
+            case 'X':
+            {
+                printf("Usage: %s -X <file0> <file1> ...\n", g_cmd_line);
+                printf("            -X [input]: 1 or more files with 64bit fpas. [output]: parse 64 bit pbas\n");
                 if (!print_all)
                 {
                     return;
@@ -167,7 +177,7 @@ u32 print_pba_by_string(const char *pba_str)
     return RET_SUCCESS;
 }
 
-u32 print_pba_by_file(char *pba_file)
+u32 print_pba_by_file(char *pba_file, u32 is_pba44, u32 str_num)
 {
     FILE *fp = fopen(pba_file, "r");
     char pba_str[32];
@@ -183,7 +193,16 @@ u32 print_pba_by_file(char *pba_file)
     {
         pba_str[strlen(pba_str) - 1] = '\0';
         printf("%d: ", line++);
-        print_pba_by_string(pba_str);
+        if (is_pba44)
+        {
+            const char *pba_str_array[2];
+            pba_str_array[0] = pba_str;
+            print_pba44_by_string(pba_str_array, str_num);
+        }
+        else 
+        {
+            print_pba_by_string(pba_str);
+        }        
     }
 
     fclose(fp);
@@ -226,7 +245,14 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
     {
         if (0 == string_to_u64(pba44_str[0], &pba44.val))
         {
-            printf("ERR: PBA44 %s is not valid\n", pba44_str[0]);
+            if (is_empty_string(pba44_str[0]))
+            {
+                printf ("Skip Empty Line\n");
+            }
+            else 
+            {
+                printf("ERR: PBA44 %s is not valid\n", pba44_str[0]);
+            }         
             return RET_FAIL;
         }
     }
@@ -237,12 +263,26 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
 
         if (0 == string_to_u64(pba44_str[0], &lo32) || lo32 > INVALID_U32)
         {
-            printf("ERR: PBA44 lo32 %s is not valid\n", pba44_str[0]);
+            if (is_empty_string(pba44_str[0]))
+            {
+                printf ("Skip Empty Line\n");
+            }
+            else 
+            {
+                printf("ERR: PBA44 lo32 %s is not valid\n", pba44_str[0]);
+            }           
             return RET_FAIL;
         }
         else if (0 == string_to_u64(pba44_str[1], &hi32) || hi32 > INVALID_U32)
         {
-            printf("ERR: PBA44 hi32 %s is not valid\n", pba44_str[0]);
+            if (is_empty_string(pba44_str[1]))
+            {
+                printf ("Skip Empty Line\n");
+            }
+            else
+            {
+                printf("ERR: PBA44 hi32 %s is not valid\n", pba44_str[1]);
+            }         
             return RET_FAIL;
         }
 
@@ -269,7 +309,7 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
 int main(int argc, char **argv)
 {
     int o, i, opt_cnt= 0;
-    const char *optstrings = "p:P:s:x:v::";
+    const char *optstrings = "p:P:s:x:X:v::";
     g_cmd_line = argv[0];
     while ((o = getopt(argc, argv, optstrings)) != -1)
     {
@@ -293,7 +333,7 @@ int main(int argc, char **argv)
                 CHECK_OPT_PARAM('P', 3);
                 for (i = optind - 1; i < argc; i++)
                 {
-                    if (RET_FAIL == print_pba_by_file(argv[i]))
+                    if (RET_FAIL == print_pba_by_file(argv[i], false, 1))
                     {
                         return RET_FAIL;
                     }
@@ -323,6 +363,18 @@ int main(int argc, char **argv)
                 for (i = optind - 1; i < argc; i += 1)
                 {
                     if (RET_FAIL == print_pba44_by_string((const char **)&argv[i], 1))
+                    {
+                        return RET_FAIL;
+                    }
+                }
+                break;
+            }
+            case 'X':
+            {
+                CHECK_OPT_PARAM('X', 3);
+                for (i = optind - 1; i < argc; i++)
+                {
+                    if (RET_FAIL == print_pba_by_file(argv[i], true, 1))
                     {
                         return RET_FAIL;
                     }
