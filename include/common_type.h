@@ -1,6 +1,4 @@
-#ifndef COMMON_TYPE_H
-#define COMMON_TYPE_H
-
+#pragma once
 #include "std_type.h"
 
 #ifdef X3
@@ -279,5 +277,3 @@ static inline u32 split_string_by_characters(char *string, char *characters, u32
 
     return colum_num;
 }
-
-#endif

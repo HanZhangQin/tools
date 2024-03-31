@@ -1,5 +1,4 @@
-#ifndef LIST_H
-#define LIST_H
+#pragma once
 
 #include "std_type.h"
 
@@ -142,5 +141,3 @@ static inline u32 SinglyLinkedList_GoTroughAndDel(singly_linked_list_head_t *obj
 
 #define SinglyLinkedList_DelAllNodes(obj)   SinglyLinkedList_GoTroughAndDel((singly_linked_list_head_t *)(obj), NULL)
 #define SinglyLinkedList_Length(obj)        SinglyLinkedList_GoTrough((singly_linked_list_head_t *)(obj), NULL)
-
-#endif

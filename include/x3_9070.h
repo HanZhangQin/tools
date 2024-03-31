@@ -1,5 +1,6 @@
-#ifndef X3_9070_H
-#define X3_9070_H
+#pragma once
+
+#include "std_type.h"
 
 #define MAX_CHANNEL                             16
 #define NAND_PAGE_NUM_PER_BLOCK                 4176
@@ -36,5 +37,3 @@ typedef union
     };
     u64 val;
 } U_FPA_44BIT;
-
-#endif
