@@ -141,3 +141,134 @@ static inline u32 SinglyLinkedList_GoTroughAndDel(singly_linked_list_head_t *obj
 
 #define SinglyLinkedList_DelAllNodes(obj)   SinglyLinkedList_GoTroughAndDel((singly_linked_list_head_t *)(obj), NULL)
 #define SinglyLinkedList_Length(obj)        SinglyLinkedList_GoTrough((singly_linked_list_head_t *)(obj), NULL)
+
+
+typedef struct doubly_linked_list_entry_s
+{ 
+    struct doubly_linked_list_entry_s *next;
+    struct doubly_linked_list_entry_s *prev;
+} doubly_linked_list_entry_t;
+
+typedef union
+{
+    doubly_linked_list_entry_t root;
+    struct
+    {
+        doubly_linked_list_entry_t *head;
+        doubly_linked_list_entry_t *tail;
+    };
+} doubly_linked_list_head_t;
+
+typedef u32 (*doubly_linked_list_callback_fn_t)(doubly_linked_list_entry_t *);
+
+static inline void DoublyLinkedList_Init(doubly_linked_list_head_t *obj)
+{
+    obj->head = obj->tail = &obj->root;
+}
+
+static inline u32 DoublyLinkedList_IsEmpty(doubly_linked_list_head_t * obj)
+{
+    return (obj->head == &obj->root);
+}
+
+static inline void DoublyLinkedList_InsertBefore(doubly_linked_list_entry_t *next, doubly_linked_list_entry_t *node)
+{
+    node->next = next;
+    node->prev = next->prev;
+    next->prev->next = node;
+    next->prev = node;
+}
+
+static inline void DoublyLinkedList_InsertAfter(doubly_linked_list_entry_t *prev, doubly_linked_list_entry_t *node)
+{
+    node->prev = prev;
+    node->next = prev->next;
+    prev->next->prev = node;
+    prev->next = node;
+}
+
+static inline void DoublyLinkedList_PushFront(doubly_linked_list_head_t *obj, doubly_linked_list_entry_t *node)
+{
+    DoublyLinkedList_InsertBefore(obj->head, node);
+}
+
+static inline void DoublyLinkedList_PushBack(doubly_linked_list_head_t *obj, doubly_linked_list_entry_t *node)
+{
+    DoublyLinkedList_InsertAfter(obj->tail, node);
+}
+
+static inline doubly_linked_list_entry_t *DoublyLinkedList_Del(doubly_linked_list_entry_t * node)
+{
+    node->prev->next = node->next;
+    node->next->prev = node->prev;
+}
+
+static inline doubly_linked_list_entry_t *DoublyLinkedList_PopFront(doubly_linked_list_head_t *obj)
+{
+    doubly_linked_list_entry_t *node = NULL;
+    if (!DoublyLinkedList_IsEmpty(obj))
+    {
+        node = DoublyLinkedList_Del(obj->head);
+    }
+    
+    return node;
+}
+
+static inline doubly_linked_list_entry_t *DoublyLinkedList_PopBack(doubly_linked_list_head_t *obj)
+{
+    doubly_linked_list_entry_t *node = NULL;
+    if (!DoublyLinkedList_IsEmpty(obj))
+    {
+        node = DoublyLinkedList_Del(obj->tail);
+    }
+    
+    return node;
+}
+
+static inline u32 DoublyLinkedList_GoTroughAndDel(doubly_linked_list_head_t *obj,  doubly_linked_list_callback_fn_t callback)
+{
+    u32 node_cnt = 0;
+    while (!DoublyLinkedList_IsEmpty(obj))
+    {
+        doubly_linked_list_entry_t *pNode = DoublyLinkedList_PopFront(obj);
+        if (NULL != callback)
+        {
+            callback(pNode);
+        }
+        node_cnt++;
+    }
+    return node_cnt;
+}
+
+static inline u32 DoublyLinkedList_GoTrough(doubly_linked_list_head_t *obj,  doubly_linked_list_callback_fn_t callback)
+{
+    u32 node_cnt = 0;
+    doubly_linked_list_entry_t *pNode = obj->head;
+    while (pNode != &obj->root)
+    {        
+        if (NULL != callback)
+        {
+            callback(pNode);
+        }
+        pNode = pNode->next;
+        node_cnt++;
+    }
+    return node_cnt;
+}
+
+static inline void DoublyLinkedList_Reverse(doubly_linked_list_head_t *obj)
+{
+    doubly_linked_list_entry_t *cur = &obj->root;
+    do
+    {
+        doubly_linked_list_entry_t *prev = cur->prev;
+        doubly_linked_list_entry_t *next = cur->next;
+        cur->next = prev;
+        cur->prev = next;
+        cur = cur->prev;
+
+    } while (cur != &obj->root);
+}
+
+#define DoublyLinkedList_DelAllNodes(obj)   DoublyLinkedList_GoTroughAndDel((doubly_linked_list_head_t *)(obj), NULL)
+#define DoublyLinkedList_Length(obj)	    DoublyLinkedList_GoTrough((doubly_linked_list_head_t *)obj, NULL)
