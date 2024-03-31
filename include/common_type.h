@@ -10,6 +10,10 @@
 #define FLASH_TYPE TO_STRING(X3)
 #include "x3_9070.h"
 #endif
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #define DECLARE_BIT_FIELD32(name, lsb, msb)     struct { u32 : (lsb); u32 name : ((msb)-(lsb)+1); }
 #define L2P_ENTRY_LAU_MSB                       NAND_L2P_ENTRY_AU_MSB
@@ -44,6 +48,12 @@ typedef union
 #define IS_CHAR_HEX(ch)     (IS_CHAR_DEC(ch) \
                             || (((ch) >= 'a') && ((ch) <= 'f')) \
                             || (((ch) >= 'A') && ((ch) <= 'F')))
+
+static inline u32 gen_rand_u32(u32 min, u32 max)
+{
+    srand(time(NULL));
+    return (rand() % max) + min;
+}
 
 #define STR_TO_U64_DOUBLE_CHECK    1
 
@@ -216,5 +226,58 @@ static inline u32 split_string(char *str, char **colum, u32 max_colum)
     return colum_num;
 }
 
+typedef struct 
+{ 
+    char *string_start;
+    u32 string_len;
+} cloumn_t;
+
+static inline u32 is_char_in_string(char *string, u32 str_len, char ch)
+{
+    for (u32 i = 0; i < str_len; i++)
+    {
+        if (ch == string[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static inline u32 split_string_by_characters(char *string, char *characters, u32 characters_len, u32 max_colum, cloumn_t *column_array)
+{
+    u32 colum_num = 0, colum_len = 0;
+    u32 char_len = characters_len < strlen(characters) ? characters_len : strlen(characters);
+    char *ch = string;
+
+    while (*ch)
+    {
+        if (*ch >= 33 && !is_char_in_string(characters, char_len, *ch))
+        {
+            if (0 == colum_len)
+            {
+                column_array[colum_num].string_start = ch;
+            }
+            colum_len++;
+        }
+        else 
+        {
+            if (colum_len)
+            {
+                column_array[colum_num].string_len = colum_len;
+                colum_num++;
+                if (colum_num >= max_colum)
+                {
+                    break;
+                }
+                colum_len = 0;
+            }            
+        }
+        ch++;
+    }
+
+    return colum_num;
+}
 
 #endif
