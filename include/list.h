@@ -3,12 +3,12 @@
 #include "std_type.h"
 
 typedef struct singly_linked_list_entry_s
-{ 
+{
     struct singly_linked_list_entry_s *next;
 } singly_linked_list_entry_t;
 
-typedef struct 
-{ 
+typedef struct
+{
     singly_linked_list_entry_t *head;
     singly_linked_list_entry_t *tail;
 } singly_linked_list_head_t;
@@ -33,10 +33,10 @@ static inline void SinglyLinkedList_PushFront( singly_linked_list_head_t *obj, s
         obj->head = node;
         obj->tail = node;
     }
-    else 
+    else
     {
         node->next = obj->head;
-        obj->head = node;       
+        obj->head = node;
     }
 }
 
@@ -47,10 +47,10 @@ static inline void SinglyLinkedList_PushBack( singly_linked_list_head_t *obj, si
     {
         obj->head = node;
     }
-    else 
+    else
     {
         obj->tail->next = node;
-    }    
+    }
     obj->tail = node;
 }
 
@@ -75,7 +75,7 @@ static inline void SinglyLinkedList_SetTailIfEmpty( singly_linked_list_head_t *o
 static inline singly_linked_list_entry_t *SinglyLinkedList_PopFront(singly_linked_list_head_t *obj)
 {
     singly_linked_list_entry_t *node = obj->head;
-    
+
     if (!SinglyLinkedList_IsEmpty(obj))
     {
         obj->head = obj->head->next;
@@ -88,15 +88,15 @@ static inline singly_linked_list_entry_t *SinglyLinkedList_PopFront(singly_linke
 static inline u32 SinglyLinkedList_SearchAndDelNode(singly_linked_list_head_t *obj, singly_linked_list_entry_t *node)
 {
     singly_linked_list_entry_t **cur = &obj->head;
-    while (*cur != NULL) 
+    while (*cur != NULL)
     {
         if (*cur == node)
         {
             *cur = node->next;
             if (obj->tail == node)
             {
-                obj->tail = SinglyLinkedList_IsEmpty(obj) ? NULL : (singly_linked_list_entry_t *)cur; 
-            }            
+                obj->tail = SinglyLinkedList_IsEmpty(obj) ? NULL : (singly_linked_list_entry_t *)cur;
+            }
             return RET_SUCCESS;
         }
         cur = &((*cur)->next);
@@ -105,17 +105,76 @@ static inline u32 SinglyLinkedList_SearchAndDelNode(singly_linked_list_head_t *o
     return RET_FAIL;
 }
 
+static inline u32 SinglyLinkedList_SearchAndDelNodeByCond(singly_linked_list_head_t *obj, singly_linked_list_callback_fn_t callback)
+{
+#if 1
+    singly_linked_list_entry_t **cur = &obj->head;
+    u32 cnt = 0;
+    while (*cur != NULL)
+    {
+        if (NULL != callback)
+        {
+            singly_linked_list_entry_t *tmp = *cur;
+            *cur = tmp->next;
+            // printf ("0x%x 0x%x\n", tmp, *cur);
+            if (false == callback(tmp))
+            {
+                *cur = tmp;
+                cur = &((*cur)->next);
+            }
+            else
+            {
+                cnt++;
+                if (obj->tail == tmp)
+                {
+                    obj->tail = SinglyLinkedList_IsEmpty(obj) ? NULL : (singly_linked_list_entry_t *)cur;
+                }
+
+            }
+        }
+    }
+
+    return cnt;
+#else
+    u32 cnt = 0;
+    singly_linked_list_entry_t *prev = (singly_linked_list_entry_t *)obj;
+    while (prev->next != NULL)
+    {
+        if (NULL != callback)
+        {
+            singly_linked_list_entry_t *cur = prev->next;
+            prev->next = cur->next;
+            if (false == callback(cur))
+            {
+                prev->next = cur;
+                prev = prev->next;
+            }
+            else
+            {
+                cnt++;
+                if (cur == obj->tail)
+                {
+                    obj->tail = SinglyLinkedList_IsEmpty(obj) ? NULL : cur;
+                }
+            }
+        }
+    }
+
+    return cnt;
+#endif
+}
+
 static inline u32 SinglyLinkedList_GoTrough(singly_linked_list_head_t *obj, singly_linked_list_callback_fn_t callback)
 {
     singly_linked_list_entry_t *pNode = obj->head;
     u32 cnt = 0;
-    
+
     while (pNode != NULL)
-    {        
-        if(NULL != callback)              
+    {
+        if(NULL != callback)
         {
             callback(pNode);
-        }        
+        }
         pNode = pNode->next;
         cnt++;
     }
@@ -128,8 +187,8 @@ static inline u32 SinglyLinkedList_GoTroughAndDel(singly_linked_list_head_t *obj
     u32 cnt = 0;
     while (!SinglyLinkedList_IsEmpty(obj))
     {
-        singly_linked_list_entry_t *pNode = SinglyLinkedList_PopFront(obj);       
-        if (NULL != callback) 
+        singly_linked_list_entry_t *pNode = SinglyLinkedList_PopFront(obj);
+        if (NULL != callback)
         {
             callback(pNode);
         }
@@ -144,7 +203,7 @@ static inline u32 SinglyLinkedList_GoTroughAndDel(singly_linked_list_head_t *obj
 
 
 typedef struct doubly_linked_list_entry_s
-{ 
+{
     struct doubly_linked_list_entry_s *next;
     struct doubly_linked_list_entry_s *prev;
 } doubly_linked_list_entry_t;
@@ -201,6 +260,8 @@ static inline doubly_linked_list_entry_t *DoublyLinkedList_Del(doubly_linked_lis
 {
     node->prev->next = node->next;
     node->next->prev = node->prev;
+
+    return node;
 }
 
 static inline doubly_linked_list_entry_t *DoublyLinkedList_PopFront(doubly_linked_list_head_t *obj)
@@ -210,7 +271,7 @@ static inline doubly_linked_list_entry_t *DoublyLinkedList_PopFront(doubly_linke
     {
         node = DoublyLinkedList_Del(obj->head);
     }
-    
+
     return node;
 }
 
@@ -221,7 +282,7 @@ static inline doubly_linked_list_entry_t *DoublyLinkedList_PopBack(doubly_linked
     {
         node = DoublyLinkedList_Del(obj->tail);
     }
-    
+
     return node;
 }
 
@@ -245,7 +306,7 @@ static inline u32 DoublyLinkedList_GoTrough(doubly_linked_list_head_t *obj,  dou
     u32 node_cnt = 0;
     doubly_linked_list_entry_t *pNode = obj->head;
     while (pNode != &obj->root)
-    {        
+    {
         if (NULL != callback)
         {
             callback(pNode);

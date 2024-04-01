@@ -2,10 +2,10 @@
 #include "../include/list.h"
 #include "../include/common_type.h"
 
-#define MAX_LIST_LENGTH 1000
+#define MAX_LIST_LENGTH 100
 #define PTR_2_IDX(type, ptr, base) ((ptr != NULL) ? ((u32)((type *)(ptr) - (type *)(base))) : 0)
 
-typedef struct 
+typedef struct
 {
     singly_linked_list_entry_t node;
     u32 data;
@@ -13,7 +13,7 @@ typedef struct
 
 u32 print_data_node(data_t *pData)
 {
-    printf ("%d %s", pData->data, (pData->node.next != NULL) ? "-> " : "\n" );    
+    printf ("%d %s", pData->data, (pData->node.next != NULL) ? "-> " : "\n" );
     return RET_SUCCESS;
 }
 
@@ -36,19 +36,19 @@ void random_del_node(singly_linked_list_head_t *data_list, data_t *data_pool)
 {
     singly_linked_list_entry_t *pNode;
 
-    while (!SinglyLinkedList_IsEmpty(data_list)) 
+    while (!SinglyLinkedList_IsEmpty(data_list))
     {
         u32 node_index;
-        do 
+        do
         {
             node_index = gen_rand_u32(0, MAX_LIST_LENGTH);
-            pNode = &data_pool[node_index].node;       
+            pNode = &data_pool[node_index].node;
         } while (RET_FAIL == SinglyLinkedList_SearchAndDelNode(data_list, pNode));
 
         printf ("Afetr Del List %d [Length: %d head: %d tail: %d]:\n", node_index, SinglyLinkedList_Length(data_list), PTR_2_IDX(data_t, data_list->head, data_pool), PTR_2_IDX(data_t, data_list->tail, data_pool));
-        
+
         SinglyLinkedList_GoTrough(data_list, (singly_linked_list_callback_fn_t)print_data_node);
-        
+
     }
     printf ("EMPTY_LIST Length: %d head: 0x%llx tail: 0x%llx\n", SinglyLinkedList_Length(data_list), (u64)data_list->head, (u64)data_list->tail);
 }
@@ -77,11 +77,11 @@ u32 calc_cur_check_sum(singly_linked_list_head_t *list1, singly_linked_list_head
 }
 
 void random_insert_del_node(singly_linked_list_head_t *data_list, data_t *data_pool)
-{    
+{
     singly_linked_list_head_t list_back;
     singly_linked_list_head_t *another_list = &list_back;
     SinglyLinkedList_Init(another_list);
-    
+
     SinglyLinkedList_GoTrough(data_list, add_inital_check_sum);
     SinglyLinkedList_GoTrough(another_list, add_inital_check_sum);
     printf ("RAND INSERT DEL TEST INIT CHECKSUM %d\n", g_init_check_sum);
@@ -93,7 +93,7 @@ void random_insert_del_node(singly_linked_list_head_t *data_list, data_t *data_p
         u32 is_push_front = gen_rand_u32(0, 2);
         singly_linked_list_entry_t *pNode = &data_pool[node_index].node;
         singly_linked_list_head_t *push_list = NULL;
-        
+
         if (RET_SUCCESS == SinglyLinkedList_SearchAndDelNode(data_list, pNode))
         {
             push_list = another_list;
@@ -102,7 +102,7 @@ void random_insert_del_node(singly_linked_list_head_t *data_list, data_t *data_p
         {
             push_list = data_list;
         }
-        else 
+        else
         {
             printf ("ERR: node %d not in any list!\n", node_index);
             SinglyLinkedList_GoTrough(data_list, (singly_linked_list_callback_fn_t)print_data_node);
@@ -121,7 +121,7 @@ void random_insert_del_node(singly_linked_list_head_t *data_list, data_t *data_p
                 return;
             }
         }
-        else 
+        else
         {
             SinglyLinkedList_PushBack(push_list, pNode);
             if (push_list->tail != pNode)
@@ -142,7 +142,7 @@ void random_insert_del_node(singly_linked_list_head_t *data_list, data_t *data_p
         }
         loop_count++;
     }
-   
+
     u32 node_count = 0;
     node_count = SinglyLinkedList_GoTrough(data_list, (singly_linked_list_callback_fn_t)print_data_node);
     node_count += SinglyLinkedList_GoTrough(another_list, (singly_linked_list_callback_fn_t)print_data_node);
@@ -150,16 +150,28 @@ void random_insert_del_node(singly_linked_list_head_t *data_list, data_t *data_p
     printf ("Test done loop cnt %d %d\n", loop_count, node_count);
 }
 
+u32 data_remove_condition(singly_linked_list_entry_t *data)
+{
+    return ((((data_t *)data)->data % 5) != 0) ? true : false;
+}
+
+void test_SinglyLinkedList_SearchAndDelNodeByCond(singly_linked_list_head_t *data_list, data_t *data_pool)
+{
+    create_data_list(data_list, data_pool, false);
+    SinglyLinkedList_SearchAndDelNodeByCond(data_list, data_remove_condition);
+    SinglyLinkedList_GoTrough(data_list, (singly_linked_list_callback_fn_t)print_data_node);
+}
+
 int main(void)
 {
     data_t data_pool[MAX_LIST_LENGTH];
     singly_linked_list_head_t data_list;
     SinglyLinkedList_Init(&data_list);
- #if 0   
+ #if 0
     // create a list in order
-    create_data_list(&data_list, data_pool, false);   
+    create_data_list(&data_list, data_pool, false);
     random_del_node(&data_list, data_pool);
-    
+
     printf ("\n");
     // create a list in reverse order
     create_data_list(&data_list, data_pool, true);
@@ -167,8 +179,11 @@ int main(void)
 
     printf ("\n");
 #endif
+#if 0
     // create a list in order
     create_data_list(&data_list, data_pool, false);
     random_insert_del_node(&data_list, data_pool);
+#endif
+    test_SinglyLinkedList_SearchAndDelNodeByCond(&data_list, data_pool);
     return 0;
 }
