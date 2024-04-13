@@ -31,6 +31,14 @@
                 <mxCell id="25" value="&lt;h1&gt;Search File: &quot;/etc/ssh&quot;&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;dashed=1;" parent="1" vertex="1">
                     <mxGeometry x="-470" y="-1110" width="270" height="40" as="geometry"/>
                 </mxCell>
+                <mxCell id="27" style="edgeStyle=none;html=1;" edge="1" parent="1" source="26">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-410" y="-925" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="struct dir_entry {&#10;&#9;unsigned short inode;&#10;&#9;char name[NAME_LEN];&#10;};" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-670" y="-965" width="160" height="80" as="geometry"/>
+                </mxCell>
             </root>
         </mxGraphModel>
     </diagram>
