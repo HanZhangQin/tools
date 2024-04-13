@@ -1,0 +1,37 @@
+<mxfile host="65bd71144e">
+    <diagram id="mf7UImjnWUSg0wBvuif-" name="第 1 页">
+        <mxGraphModel dx="2657" dy="2308" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="&lt;h1&gt;&lt;span style=&quot;background-color: initial; font-size: 12px; font-weight: normal;&quot;&gt;Name:&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &quot;/&quot;&lt;/span&gt;&lt;br&gt;&lt;/h1&gt;&lt;div&gt;Inode_id:&amp;nbsp; &amp;nbsp; &amp;nbsp;0&lt;/div&gt;" style="text;html=1;strokeColor=default;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="-400" y="-960" width="120" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="3" target="20" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=default;fillColor=none;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="-400" y="-920" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="&lt;h1&gt;&lt;span style=&quot;background-color: initial; font-size: 12px; font-weight: normal;&quot;&gt;Name:&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &quot;sys&quot;&lt;/span&gt;&lt;br&gt;&lt;/h1&gt;&lt;div&gt;Inode_id:&amp;nbsp; &amp;nbsp; &amp;nbsp;1&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;h1&gt;&lt;span style=&quot;background-color: initial; font-size: 12px; font-weight: normal;&quot;&gt;Name:&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &quot;usr&quot;&lt;/span&gt;&lt;br&gt;&lt;/h1&gt;&lt;div&gt;Inode_id:&amp;nbsp; &amp;nbsp; &amp;nbsp;2&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;h1&gt;&lt;span style=&quot;background-color: initial; font-size: 12px; font-weight: normal;&quot;&gt;Name:&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &quot;etc&quot;&lt;/span&gt;&lt;br&gt;&lt;/h1&gt;&lt;div&gt;Inode_id:&amp;nbsp; &amp;nbsp; &amp;nbsp;3&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;......&lt;/div&gt;" style="text;html=1;strokeColor=default;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="-190" y="-1065" width="120" height="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="20" target="22" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=default;fillColor=none;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="-190" y="-800" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="&lt;h1&gt;&lt;span style=&quot;background-color: initial; font-size: 12px; font-weight: normal;&quot;&gt;Name:&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &quot;ssh&quot;&lt;/span&gt;&lt;br&gt;&lt;/h1&gt;&lt;div&gt;Inode_id:&amp;nbsp; &amp;nbsp; &amp;nbsp;4&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;h1&gt;&lt;span style=&quot;background-color: initial; font-size: 12px; font-weight: normal;&quot;&gt;Name:&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &quot;apt&quot;&lt;/span&gt;&lt;br&gt;&lt;/h1&gt;&lt;div&gt;Inode_id:&amp;nbsp; &amp;nbsp; &amp;nbsp;5&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;h1&gt;&lt;span style=&quot;background-color: initial; font-size: 12px; font-weight: normal;&quot;&gt;Name:&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &quot;cfg&quot;&lt;/span&gt;&lt;br&gt;&lt;/h1&gt;&lt;div&gt;Inode_id:&amp;nbsp; &amp;nbsp; &amp;nbsp;6&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;......&lt;/div&gt;" style="text;html=1;strokeColor=default;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="-1070" width="120" height="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=default;fillColor=none;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="-1030" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="&lt;h1&gt;Search File: &quot;/etc/ssh&quot;&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="-470" y="-1110" width="270" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
