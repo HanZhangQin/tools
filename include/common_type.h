@@ -1,11 +1,17 @@
 #pragma once
 #include "std_type.h"
 
-#ifdef X3
-#define FLASH_TYPE TO_STRING(X3)
+#ifdef X3_9070
+#define FLASH_TYPE TO_STRING(X3_9070)
 #include "x3_9070.h"
+#elif defined(X4_9060)
+#define FLASH_TYPE TO_STRING(X4_9060)
+#include "x4_9060.h"
+#elif defined(X4_9070)
+#define FLASH_TYPE TO_STRING(X4_9070)
+#include "x4_9070.h"
 #else
-#define FLASH_TYPE TO_STRING(X3)
+#define FLASH_TYPE TO_STRING(XX3_9070)
 #include "x3_9070.h"
 #endif
 #include <string.h>
@@ -210,7 +216,7 @@ static inline u32 split_string(char *str, char **colum, u32 max_colum)
             }
             colum_len++;
         }
-        else 
+        else
         {
             if (colum_num >= max_colum)
             {
@@ -224,8 +230,8 @@ static inline u32 split_string(char *str, char **colum, u32 max_colum)
     return colum_num;
 }
 
-typedef struct 
-{ 
+typedef struct
+{
     char *string_start;
     u32 string_len;
 } cloumn_t;
@@ -259,7 +265,7 @@ static inline u32 split_string_by_characters(char *string, char *characters, u32
             }
             colum_len++;
         }
-        else 
+        else
         {
             if (colum_len)
             {
@@ -270,7 +276,7 @@ static inline u32 split_string_by_characters(char *string, char *characters, u32
                     break;
                 }
                 colum_len = 0;
-            }            
+            }
         }
         ch++;
     }

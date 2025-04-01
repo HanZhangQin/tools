@@ -1,8 +1,8 @@
 /*
  * @Author: Hanzhang Qin hanzhang.qin@memblaze.com
  * @Date: 2024-03-22 16:19:10
- * @LastEditors: Hanzhang Qin hanzhang.qin@memblaze.com
- * @LastEditTime: 2024-03-27 18:58:14
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2024-07-11 10:59:01
  * @FilePath: \undefinedz:\useful\PBA\pba.c
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -207,7 +207,7 @@ u32 print_pba_by_file(char *pba_file, u32 is_pba44, u32 str_num)
             char *pba_str_array[2] = {"", ""};
             if (str_num == 1)
             {
-                pba_str_array[0] = pba_str;                
+                pba_str_array[0] = pba_str;
             }
             else
             {
@@ -215,10 +215,10 @@ u32 print_pba_by_file(char *pba_file, u32 is_pba44, u32 str_num)
             }
             print_pba44_by_string((const char **)pba_str_array, str_num);
         }
-        else 
+        else
         {
             print_pba_by_string(pba_str);
-        }        
+        }
     }
 
     fclose(fp);
@@ -265,10 +265,10 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
             {
                 printf ("Skip Empty Line\n");
             }
-            else 
+            else
             {
                 printf("ERR: PBA44 %s is not valid\n", pba44_str[0]);
-            }         
+            }
             return RET_FAIL;
         }
     }
@@ -283,10 +283,10 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
             {
                 printf ("Skip Empty Line\n");
             }
-            else 
+            else
             {
                 printf("ERR: PBA44 lo32 %s is not valid\n", pba44_str[0]);
-            }           
+            }
             return RET_FAIL;
         }
         else if (0 == string_to_u64(pba44_str[1], &hi32) || hi32 > INVALID_U32)
@@ -298,7 +298,7 @@ u32 print_pba44_by_string(const char *pba44_str[], u32 str_num)
             else
             {
                 printf("ERR: PBA44 hi32 %s is not valid\n", pba44_str[1]);
-            }         
+            }
             return RET_FAIL;
         }
 
