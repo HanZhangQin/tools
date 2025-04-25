@@ -126,7 +126,7 @@ static inline u32 string_to_u64(const char *str, u64 *val)
 {
     char tmp_str[128];
     const char *ch = str;
-    u32 str_len = 0, isHex = false, num = 0;
+    u32 str_len = 0, isHex = false;
     u64 tmp_val = 0;
 
     while (*ch && *ch < 33)//((*ch == ' ') || (*ch == '\t'))
